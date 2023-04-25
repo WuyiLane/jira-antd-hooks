@@ -34,6 +34,11 @@ export const ProjectListScreen = ():JSX.Element =>{
                 setList(await res.json())
             }
         })
+        //   fetch('./_json_server_mock_/list.json').then(async  res =>{
+        //     if(res.ok){
+        //         setList(await res.json())
+        //     }
+        // })
     },[useDebounceParam])
     useMount(() =>{
         fetch(`${apiUrl}/users`).then(async  res =>{
