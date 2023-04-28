@@ -17,9 +17,9 @@ export const login = (data: { username: string; password: string }) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  }).then(async respone => {
-    if (respone.ok) {
-      return handleUserResponse(await respone.json());
+  }).then(async response => {
+    if (response.ok) {
+      return handleUserResponse(await response.json());
     } else {
       return Promise.reject(data);
     }
@@ -32,9 +32,9 @@ export const register = (data: { username: string; password: string }) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  }).then(async respone => {
-    if (respone.ok) {
-      return handleUserResponse(await respone.json());
+  }).then(async response => {
+    if (response.ok) {
+      return handleUserResponse(await response.json());
     } else {
       return Promise.reject(data);
     }

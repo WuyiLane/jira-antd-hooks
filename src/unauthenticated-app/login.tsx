@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import { Button, Checkbox, Form, Input } from 'antd';
-import { useAuth } from '../context/auth-context';
+import { useAuth } from 'context/auth-context';
 
 // 普通类型
 
@@ -87,7 +87,7 @@ export const LoginScreen = () => {
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type='primary' htmlType='submit'>
-          注册
+          登录
         </Button>
       </Form.Item>
     </Form>

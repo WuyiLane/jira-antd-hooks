@@ -1,10 +1,10 @@
 // 在一个函数里,改变传入的对象本身是不好的
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export const isFalsy = (value: number) => (value === 0 ? false : !value);
 export const cleanObject = (object: any) => {
   const result = { ...object };
-  Object.keys(result).forEach((key) => {
+  Object.keys(result).forEach(key => {
     const value = result[key];
     if (isFalsy(value)) {
       delete result[key];
@@ -15,9 +15,10 @@ export const cleanObject = (object: any) => {
 
 // 只加载一次的空数组
 
-export const useMount = (callback: any) => {
+export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
 

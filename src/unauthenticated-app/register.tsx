@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import { Button, Checkbox, Form, Input } from 'antd';
-import { useAuth } from '../context/auth-context';
+import { useAuth } from 'context/auth-context';
 
 // 普通类型
 

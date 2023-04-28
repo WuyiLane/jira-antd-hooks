@@ -66,9 +66,9 @@ export function SearchPanel({ users, list, param, setParam }: SearchPanelProps):
   };
   useEffect(() => {
     if (showDifference) {
-      const filterlist = Handledifference(list) as any;
-      console.log(filterlist);
-      setFilteredList([...filterlist]);
+      const filterlistList = Handledifference(list) as any;
+      console.log(filterlistList);
+      setFilteredList(filterlistList);
     } else {
       console.log(list);
       setFilteredList([...list]);

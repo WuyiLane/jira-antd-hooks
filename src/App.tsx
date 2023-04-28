@@ -1,12 +1,14 @@
 import React from 'react';
 import './App.css';
+import 'antd/dist/antd.min.css';
 import { AuthenticatedApp } from './authenticated-app';
-import { UnauthenticatedApp } from './unauthenticated-app';
+import { UnauthenticatedApp } from 'unauthenticated-app';
 import { useAuth } from './context/auth-context';
 
-function App() {
+const App = () => {
   const { user } = useAuth();
-  return <div className='App'>{user ? <AuthenticatedApp /> : <UnauthenticatedApp />}</div>;
-}
+  // console.log(user,"user")
+  return <div>{user ? <AuthenticatedApp /> : <UnauthenticatedApp />}</div>;
+};
 
 export default App;
