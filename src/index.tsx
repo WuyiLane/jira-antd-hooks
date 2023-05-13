@@ -2,15 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { loadDevTools } from 'jira-dev-tool';
+import { DevTools, loadServer } from 'jira-dev-tool';
+import 'antd/dist/antd.less';
 import reportWebVitals from './reportWebVitals';
-import { AppProvider } from './context';
-loadDevTools(() => {
+import { AppProviders } from 'context';
+
+import { BrowserRouter } from 'react-router-dom';
+loadServer(() => {
   ReactDOM.render(
     <React.StrictMode>
-      <AppProvider>
+      <AppProviders>
+        <DevTools />
         <App />
-      </AppProvider>
+      </AppProviders>
     </React.StrictMode>,
     document.getElementById('root')
   );

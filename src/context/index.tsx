@@ -2,7 +2,11 @@
 // children 子组件
 import React from 'react';
 import { AuthProvider } from './auth-context';
-
-export const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  return <AuthProvider>{children}</AuthProvider>;
+import { QueryClient, QueryClientProvider } from 'react-query';
+export const AppProviders = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <QueryClientProvider client={new QueryClient()}>
+      <AuthProvider>{children}</AuthProvider>;
+    </QueryClientProvider>
+  );
 };

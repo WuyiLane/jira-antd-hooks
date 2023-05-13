@@ -1,5 +1,9 @@
+/** @jsxRuntime classic */
+// pragma and pragmaFrag cannot be set when runtime is automatic. 解决
+/** @jsx jsx */
+import { jsx } from '@emotion/react';
 import React, { useEffect, useState } from 'react';
-import { Select, Input, Switch, Space } from 'antd';
+import { Select, Input, Switch, Space, Form } from 'antd';
 import { SizeType } from 'antd/es/config-provider/SizeContext';
 // import  { users } from '../../types/user'
 const { Option } = Select;
@@ -20,7 +24,7 @@ type ProjectType = {
   ths: string;
   strings: string;
   caters: string;
-  createTime: string;
+  created: string;
   keg: string;
 };
 
@@ -52,7 +56,6 @@ export function SearchPanel({ users, list, param, setParam }: SearchPanelProps):
 
   // 过滤掉相同的元素
   const Handledifference = (data: ProjectType[]): Array<any> => {
-    console.log('走了吗?');
     const map = new Map();
     return data.filter(item => {
       const key = Object.values(item).join('-');
@@ -78,11 +81,10 @@ export function SearchPanel({ users, list, param, setParam }: SearchPanelProps):
   // 调用过滤函数
   // const filteredList = showDifference ? Handledifference(list) : list;
   return (
-    <>
-      <div style={{ padding: '10px 10px' }}>
+    <Form css={{ marginBottom: '2rem' }} layout={'inline'}>
+      <Form.Item style={{ width: '7%', marginLeft: '0px' }}>
         <Input
           type='text'
-          style={{ width: '15%', marginLeft: '20px' }}
           value={param.name}
           onChange={event =>
             setParam({
@@ -91,8 +93,9 @@ export function SearchPanel({ users, list, param, setParam }: SearchPanelProps):
             })
           }
         />
+      </Form.Item>
+      <Form.Item style={{ width: '7%', marginLeft: '0px' }}>
         <Select
-          style={{ width: '10%', marginLeft: '20px' }}
           value={param.personId}
           placeholder='请输入搜索内容'
           defaultActiveFirstOption={false}
@@ -106,16 +109,17 @@ export function SearchPanel({ users, list, param, setParam }: SearchPanelProps):
             <Option key={event.id}> {event.name}</Option>
           ))}
         </Select>
-        <Space style={{ width: '10%', marginLeft: '20px' }}>
-          只看差异
-          <Switch
-            defaultChecked
-            style={{ width: '1%', marginLeft: '20px' }}
-            checked={showDifference}
-            onChange={handleToggle}
-          />
-        </Space>
-      </div>
-    </>
+      </Form.Item>
+
+      <Space style={{ width: '10%', marginLeft: '20px' }}>
+        只看差异
+        <Switch
+          defaultChecked
+          style={{ width: '1%', marginLeft: '20px' }}
+          checked={showDifference}
+          onChange={handleToggle}
+        />
+      </Space>
+    </Form>
   );
 }

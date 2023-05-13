@@ -1,12 +1,24 @@
 // 在一个函数里,改变传入的对象本身是不好的
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-export const isFalsy = (value: number) => (value === 0 ? false : !value);
-export const cleanObject = (object: any) => {
+export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
+
+export const isVoid = (value: unknown) => value === undefined || value === null || value === '';
+// export const cleanObject = (object: any) => {
+//   const result = { ...object };
+//   Object.keys(result).forEach(key => {
+//     const value = result[key];
+//     if (isFalsy(value)) {
+//       delete result[key];
+//     }
+//   });
+//   return result;
+// };
+export const cleanObject = (object: { [key: string]: unknown }) => {
   const result = { ...object };
   Object.keys(result).forEach(key => {
     const value = result[key];
-    if (isFalsy(value)) {
+    if (isVoid(value)) {
       delete result[key];
     }
   });
@@ -18,6 +30,7 @@ export const cleanObject = (object: any) => {
 export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
+    // 依赖项里加入 callback 会无限循环
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
@@ -47,4 +60,22 @@ export const useArray = <T>(initialArray: T[]) => {
       setValue(copy);
     },
   };
+};
+
+// 页面跳转 title 标题 更换 使用自定义hooks, 使用 useRef 解决闭包问题
+
+export const useDocumentTitle = (title: string, keepOnUnmount = true) => {
+  const oldTitle = useRef(document.title).current;
+  console.log('渲染时的oldTitle:', oldTitle);
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+  useEffect(() => {
+    return () => {
+      if (!keepOnUnmount) {
+        console.log('卸载时的title', oldTitle);
+        document.title = oldTitle;
+      }
+    };
+  }, [keepOnUnmount, oldTitle]);
 };
