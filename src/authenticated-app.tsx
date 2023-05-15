@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import { Row } from './component/lib';
 import { ReactComponent as SoftwareLogo } from 'assets/software-logo.svg';
 import { ReactComponent } from '*.svg';
-import { useDocumentTitle } from './utils';
+import { resetRoute, useDocumentTitle } from './utils';
 import { Navigate, Route, Routes } from 'react-router';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ProjectScreen } from './screens/ProjectScreen';
@@ -48,7 +48,10 @@ const PageHeader = () => {
     <Header between={true}>
       <HeaderLeft gap={true}>
         {/* svg 可以自定义样式*/}
-        <SoftwareLogo width={'18rem'} color={'rgb(38,132,255)'} />
+        {/*   重置路由 */}
+        <Button type={'link'} onClick={resetRoute}>
+          <SoftwareLogo width={'18rem'} color={'rgb(38,132,   255)'} />
+        </Button>
         <h2>项目</h2>
         <h2>用户</h2>
       </HeaderLeft>

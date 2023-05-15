@@ -2,7 +2,7 @@ import React, { FormEvent, useState } from 'react';
 import { Button, Form, Input } from 'antd';
 import { useAuth } from 'context/auth-context';
 import { LongButton } from './index';
-import { useAsync } from 'utils/use-async';
+import { useAsync } from '../utils/use-async';
 
 // 普通类型
 

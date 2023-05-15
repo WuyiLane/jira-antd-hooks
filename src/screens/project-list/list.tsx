@@ -3,6 +3,8 @@ import { Table } from 'antd';
 import { TableProps } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
+import { Pin } from '../../component/pin';
+import { useEditProject } from '../../utils/project';
 // react-router 和 react-router-dom 的关系  类似于 react 和react-dom的关系
 // import {Link} from "react-router-dom";
 
@@ -12,9 +14,10 @@ type UserType = {
 };
 
 export type ProjectType = {
-  id: string;
+  id: number;
   name: string;
-  personId: number;
+  pin: boolean;
+  personId: number | undefined;
   ths: string;
   strings: string;
   caters: string;
@@ -25,13 +28,17 @@ export type ProjectType = {
 
 interface ListProps extends TableProps<ProjectType> {
   users: UserType[];
+  refresh?: () => void;
 }
 
 function List({ users, ...props }: ListProps): JSX.Element {
   console.log('list', props);
   // const user = users.find(user => user.id === project.personId);
   const { dataSource } = props;
-
+  const { mutate } = useEditProject();
+  // 柯里化风格代码
+  // 先消化 id  再消化 pin
+  const PinProject = (id: number) => (pin: boolean) => mutate({ id, pin }).then(props.refresh);
   // const dataSource =
   //   // 过滤数据 将 name 过滤出来
   //   dataSource
@@ -96,7 +103,15 @@ function List({ users, ...props }: ListProps): JSX.Element {
   ];
   return (
     <Table
+      rowKey={'id'}
+      pagination={false}
       columns={[
+        {
+          title: <Pin checked={true} disabled={true} />,
+          render(value, project) {
+            return <Pin checked={project.pin} onCheckedChange={PinProject(project.id)} />;
+          },
+        },
         {
           title: '创建时间',
           dataIndex: 'created',
