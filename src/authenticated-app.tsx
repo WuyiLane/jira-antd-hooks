@@ -1,15 +1,17 @@
 import { ProjectListScreen } from 'screens/project-list';
 import { useAuth } from 'context/auth-context';
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Dropdown, Menu } from 'antd';
 import styled from '@emotion/styled';
-import { Row } from './component/lib';
+import { ButtonNoPadding, Row } from './component/lib';
 import { ReactComponent as SoftwareLogo } from 'assets/software-logo.svg';
 import { ReactComponent } from '*.svg';
 import { resetRoute, useDocumentTitle } from './utils';
 import { Navigate, Route, Routes } from 'react-router';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ProjectScreen } from './screens/ProjectScreen';
+import { ProjectModal } from 'screens/project-list/project-modal';
+import { ProjectPopover } from 'component/project-popover';
 
 /***
  *  grid 和flex
@@ -19,63 +21,79 @@ import { ProjectScreen } from './screens/ProjectScreen';
  *     从布局出发: 先规划网格(数量一般比较固定), 然后再把元素往里填充用grid
  * @constructor
  */
+
+// prop drilling  定义和使用 比较远, 传递的地方比较深  耦合在一起,
 export const AuthenticatedApp = () => {
+  const [projectModalOpen, setProjectModelOpen] = useState(false);
   const value: any = undefined;
   // useDocumentTitle('登录成功页面')
   return (
     <Container>
       {/*{value.notExist}*/}
-      <PageHeader />
+      <PageHeader setProjectModelOpen={setProjectModelOpen} />
       <Main>
         {/*<ProjectListScreen/>*/}
         <Router>
           <Routes>
-            <Route path={'/projects'} element={<ProjectListScreen />} />
+            <Route
+              path={'/projects'}
+              element={<ProjectListScreen setProjectModelOpen={setProjectModelOpen} />}
+            />
             <Route path={'/projects/:projectId/*'} element={<ProjectScreen />} />
             <Route path='*' element={<Navigate to='/projects' replace={true} />} />
           </Routes>
         </Router>
       </Main>
+      {/* 弹窗 */}
+      <ProjectModal
+        projectModalOpen={projectModalOpen}
+        onClose={() => setProjectModelOpen(false)}
+      />
     </Container>
   );
 };
 
 // 规划
 
-const PageHeader = () => {
-  const { logout, user } = useAuth();
+const PageHeader = (props: { setProjectModelOpen: (isOpen: boolean) => void }) => {
   return (
     <Header between={true}>
       <HeaderLeft gap={true}>
         {/* svg 可以自定义样式*/}
         {/*   重置路由 */}
-        <Button type={'link'} onClick={resetRoute}>
+        <ButtonNoPadding type={'link'} onClick={resetRoute}>
           <SoftwareLogo width={'18rem'} color={'rgb(38,132,   255)'} />
-        </Button>
-        <h2>项目</h2>
-        <h2>用户</h2>
+        </ButtonNoPadding>
+        <ProjectPopover setProjectModelOpen={props.setProjectModelOpen} />
+        <span>用户</span>
       </HeaderLeft>
       <HeaderRight>
-        <Dropdown
-          overlay={
-            <Menu>
-              <Menu.Item key={'logout'}>
-                <Button type={'link'} onClick={logout}>
-                  登出
-                </Button>
-              </Menu.Item>
-            </Menu>
-          }
-        >
-          <Button type={'link'} onClick={e => e.preventDefault()}>
-            Hi {user?.name}
-          </Button>
-        </Dropdown>
+        <User />
       </HeaderRight>
     </Header>
   );
 };
-
+const User = () => {
+  const { logout, user } = useAuth();
+  return (
+    <Dropdown
+      overlay={
+        <Menu>
+          <Menu.Item key={'logout'}>
+            <Button type={'link'} onClick={logout}>
+              登出
+            </Button>
+          </Menu.Item>
+        </Menu>
+      }
+    >
+      <Button type={'link'} onClick={e => e.preventDefault()}>
+        Hi {user?.name}
+      </Button>
+    </Dropdown>
+  );
+};
+// const  let 存在暂时性死区
 const Container = styled.div`
   display: grid;
   grid-template-rows: 6rem 1fr 6rem;

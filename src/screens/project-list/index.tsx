@@ -1,16 +1,15 @@
 import 'wdyr';
 import { SearchPanel } from 'screens/project-list/search-panel';
 import List from 'screens/project-list/list';
-import React, { useEffect, useState } from 'react';
-import { useDebounce, useDocumentTitle, useMount } from '../../utils';
-import qs from 'qs';
-import { useHttp } from 'utils/http';
+import React from 'react';
+import { useDebounce, useDocumentTitle } from '../../utils';
 import styled from '@emotion/styled';
 import { Button, Typography } from 'antd';
 import { useProject } from '../../utils/project';
 import { useUsers } from '../../utils/user';
 import { useUrlQueryParam } from '../../utils/url';
 import { useProjectsSearchParams } from './util';
+import { Row } from 'component/lib';
 
 type UserType = {
   id: number;
@@ -30,8 +29,23 @@ type ProjectType = {
   keg: string;
 };
 const apiUrl = process.env.REACT_APP_API_URL;
-
-export const ProjectListScreen = (): JSX.Element => {
+/***
+ * Property 'between' does not exist on type 'IntrinsicAttributes & RowProps & RefAttributes<HTMLDivElement>'.
+ * @param props
+ * @constructor
+ */
+// interface CustomRowProps {
+//   between?: boolean;
+// }
+//
+// const CustomRow: React.FC<CustomRowProps> = ({ between, ...otherProps }) => {
+//   return (
+//       <Row {...otherProps} justify={between ? 'space-between' : 'center'} />
+//   );
+// };
+export const ProjectListScreen = (props: {
+  setProjectModelOpen: (isOpen: boolean) => void;
+}): JSX.Element => {
   useDocumentTitle('项目列表', false);
   // const [,setParam] = useState({
   //   name: '',
@@ -74,13 +88,22 @@ export const ProjectListScreen = (): JSX.Element => {
   //       }
   //     });
   //   });
-  // @ts-ignore
   return (
     <Container>
-      <h1>项目列表</h1>
+      <Row between={true}>
+        <h1>项目列表</h1>
+        <Button onClick={() => props.setProjectModelOpen(true)}>创建项目</Button>
+      </Row>
+
       <SearchPanel param={param} users={users || []} setParam={setParam} list={list || []} />
       {error ? <Typography.Text type={'danger'}>{error.message}</Typography.Text> : null}
-      <List refresh={retry} dataSource={list || []} users={users || []} loading={isLoading} />
+      <List
+        setProjectModelOpen={props.setProjectModelOpen}
+        refresh={retry}
+        dataSource={list || []}
+        users={users || []}
+        loading={isLoading}
+      />
     </Container>
   );
 };

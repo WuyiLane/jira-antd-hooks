@@ -21,7 +21,7 @@ export interface User {
 }
 
 type ProjectType = {
-  id: string;
+  id: number;
   name: string;
   personId: number | undefined;
   ths: string;

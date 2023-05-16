@@ -1,22 +1,26 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { cleanObject } from './index';
 import { useAsync } from './use-async';
 import { ProjectType } from 'screens/project-list/list';
 import { useHttp } from './http';
 // 请求封装
 // ---- 获取列表------
-export const useProject = (param: Partial<ProjectType>) => {
+export const useProject = (param?: Partial<ProjectType>) => {
   const client = useHttp();
   const { run, ...result } = useAsync<ProjectType[]>();
-  const fetchProjects = () =>
-    client('projects', {
-      data: cleanObject(param || {}),
-    });
+  // usecallback 函数
+  const fetchProjects = useCallback(
+    () =>
+      client('projects', {
+        data: cleanObject(param || {}),
+      }),
+    [param, client]
+  );
   useEffect(() => {
     run(fetchProjects(), {
       retry: fetchProjects,
     });
-  }, [param]);
+  }, [param, run, fetchProjects]);
   return result;
 };
 

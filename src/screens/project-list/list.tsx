@@ -1,10 +1,11 @@
 import React from 'react';
-import { Table } from 'antd';
+import { Dropdown, Menu, Table } from 'antd';
 import { TableProps } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import { Pin } from '../../component/pin';
 import { useEditProject } from '../../utils/project';
+import { ButtonNoPadding } from '../../component/lib';
 // react-router 和 react-router-dom 的关系  类似于 react 和react-dom的关系
 // import {Link} from "react-router-dom";
 
@@ -29,6 +30,7 @@ export type ProjectType = {
 interface ListProps extends TableProps<ProjectType> {
   users: UserType[];
   refresh?: () => void;
+  setProjectModelOpen: (isOpen: boolean) => void;
 }
 
 function List({ users, ...props }: ListProps): JSX.Element {
@@ -126,6 +128,7 @@ function List({ users, ...props }: ListProps): JSX.Element {
             );
           },
         },
+
         {
           title: '名称',
           dataIndex: 'name',
@@ -155,6 +158,28 @@ function List({ users, ...props }: ListProps): JSX.Element {
           // {users.find((user) => user.id === project.personId)?.name || "无数据"}
           //   </span>
           // }
+        },
+        {
+          render(value, projecrt) {
+            return (
+              <Dropdown
+                overlay={
+                  <Menu>
+                    <Menu.Item key={'edit'}>
+                      <ButtonNoPadding
+                        type={'link'}
+                        onClick={() => props.setProjectModelOpen(true)}
+                      >
+                        编辑
+                      </ButtonNoPadding>
+                    </Menu.Item>
+                  </Menu>
+                }
+              >
+                <ButtonNoPadding type={'link'}>...</ButtonNoPadding>
+              </Dropdown>
+            );
+          },
         },
       ]}
       {...props}
