@@ -8,8 +8,10 @@ import { Button, Typography } from 'antd';
 import { useProject } from '../../utils/project';
 import { useUsers } from '../../utils/user';
 import { useUrlQueryParam } from '../../utils/url';
-import { useProjectsSearchParams } from './util';
-import { Row } from 'component/lib';
+import { useProjectModal, useProjectsSearchParams } from './util';
+import { ButtonNoPadding, ErrorBox, Row } from 'component/lib';
+import { useDispatch } from 'react-redux';
+import { projectListActions } from './project-list.slice';
 
 type UserType = {
   id: number;
@@ -43,9 +45,7 @@ const apiUrl = process.env.REACT_APP_API_URL;
 //       <Row {...otherProps} justify={between ? 'space-between' : 'center'} />
 //   );
 // };
-export const ProjectListScreen = (props: {
-  setProjectModelOpen: (isOpen: boolean) => void;
-}): JSX.Element => {
+export const ProjectListScreen = (): JSX.Element => {
   useDocumentTitle('项目列表', false);
   // const [,setParam] = useState({
   //   name: '',
@@ -55,11 +55,13 @@ export const ProjectListScreen = (props: {
 
   // const [users, setUsers] = useState<UserType[]>([]);
   const [param, setParam] = useProjectsSearchParams();
+  const { open } = useProjectModal();
   console.log(useUrlQueryParam['name']);
   // const client = useHttp()
   // 列表刷新
-  const { isLoading, error, data: list, retry } = useProject(useDebounce(param, 2000));
+  const { isLoading, error, data: list } = useProject(useDebounce(param, 2000));
   const { data: users } = useUsers();
+  const dispatch = useDispatch();
   // console.log(client,"client")
 
   // useEffect(() => {
@@ -92,18 +94,14 @@ export const ProjectListScreen = (props: {
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        <Button onClick={() => props.setProjectModelOpen(true)}>创建项目</Button>
+        <ButtonNoPadding type={'link'} onClick={open}>
+          创建项目
+        </ButtonNoPadding>
       </Row>
 
       <SearchPanel param={param} users={users || []} setParam={setParam} list={list || []} />
-      {error ? <Typography.Text type={'danger'}>{error.message}</Typography.Text> : null}
-      <List
-        setProjectModelOpen={props.setProjectModelOpen}
-        refresh={retry}
-        dataSource={list || []}
-        users={users || []}
-        loading={isLoading}
-      />
+      <ErrorBox error={error} />
+      <List dataSource={list || []} users={users || []} loading={isLoading} />
     </Container>
   );
 };

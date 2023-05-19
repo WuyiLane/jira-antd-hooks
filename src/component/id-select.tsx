@@ -5,8 +5,9 @@ import { Select } from 'antd';
 type SelectProps = React.ComponentProps<typeof Select>;
 // 继承  select 所有类型  删除重复的类型omit
 interface IdSelectProps extends Omit<SelectProps, 'value' | 'onChange' | 'options'> {
-  value: Raw | null | undefined;
-  onChange: (value?: number) => void;
+  // 不是必传的话，改成可选的
+  value?: Raw | null | undefined;
+  onChange?: (value?: number) => void;
   defaultOptionName?: string;
   options?: { name: string; id: number }[];
 }
@@ -25,7 +26,7 @@ export const IdSelect = (props: IdSelectProps) => {
   return (
     <Select
       value={options?.length ? toNumber(value) : 0}
-      onChange={value => onChange(toNumber(value))}
+      onChange={value => onChange?.(toNumber(value))}
       {...restProps}
     >
       {defaultOptionName ? <Select.Option value={0}>{defaultOptionName}</Select.Option> : null}

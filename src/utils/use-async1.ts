@@ -24,11 +24,7 @@ const useSafeDispatch = <T>(dispatch: (...args: T[]) => void) => {
     [dispatch, mountedRef]
   );
 };
-/***
- *  用 reducer 改造
- * @param initialState
- * @param initialConfig
- */
+
 export const useAsync = <D>(initialState?: State<D>, initialConfig?: typeof defaultConfig) => {
   const config = { ...defaultConfig, ...initialConfig };
   const [state, dispatch] = useReducer(

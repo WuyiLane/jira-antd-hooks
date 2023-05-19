@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import * as auth from 'auth-provider';
 import { User } from 'screens/project-list/search-panel';
 import { http } from 'utils/http';
@@ -6,14 +6,17 @@ import { useMount } from 'utils';
 import { useAsync } from '../utils/use-async';
 import { users } from '../types/user';
 import { FullPageErrorFallback, FullPageLoading } from '../component/lib';
-interface AuthForm {
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser } from 'store/auth.slice';
+import * as authStore from 'store/auth.slice';
+export interface AuthForm {
   username: string;
   password: string;
 }
 
 // 防止刷新
 
-const bootstrapUser = async () => {
+export const bootstrapUser = async () => {
   let user = null;
   const token = auth.getToken();
   if (token) {
@@ -57,16 +60,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   if (isError) {
     return <FullPageErrorFallback error={error} />;
   }
-  return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider children={children} value={{ user, login, register, logout }} />;
 };
 
 export const useAuth = () => {
   const context = React.useContext(AuthContext);
-  console.log(context, 'context');
   if (!context) {
     throw new Error('useAuth必须在AuthProvider中使用');
   }

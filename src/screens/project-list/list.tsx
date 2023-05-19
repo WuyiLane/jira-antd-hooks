@@ -4,8 +4,10 @@ import { TableProps } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import { Pin } from '../../component/pin';
-import { useEditProject } from '../../utils/project';
+import { useEditProject, useProject } from '../../utils/project';
 import { ButtonNoPadding } from '../../component/lib';
+import { useDispatch } from 'react-redux';
+import { useProjectModal } from './util';
 // react-router 和 react-router-dom 的关系  类似于 react 和react-dom的关系
 // import {Link} from "react-router-dom";
 
@@ -30,17 +32,19 @@ export type ProjectType = {
 interface ListProps extends TableProps<ProjectType> {
   users: UserType[];
   refresh?: () => void;
-  setProjectModelOpen: (isOpen: boolean) => void;
 }
 
 function List({ users, ...props }: ListProps): JSX.Element {
   console.log('list', props);
+  const dispatch = useDispatch();
   // const user = users.find(user => user.id === project.personId);
   const { dataSource } = props;
   const { mutate } = useEditProject();
   // 柯里化风格代码
   // 先消化 id  再消化 pin
-  const PinProject = (id: number) => (pin: boolean) => mutate({ id, pin }).then(props.refresh);
+  const { startEdit } = useProjectModal();
+  const PinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
+  const editProject = (id: number) => () => startEdit(id);
   // const dataSource =
   //   // 过滤数据 将 name 过滤出来
   //   dataSource
@@ -160,19 +164,15 @@ function List({ users, ...props }: ListProps): JSX.Element {
           // }
         },
         {
-          render(value, projecrt) {
+          render(value, project) {
             return (
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item key={'edit'}>
-                      <ButtonNoPadding
-                        type={'link'}
-                        onClick={() => props.setProjectModelOpen(true)}
-                      >
-                        编辑
-                      </ButtonNoPadding>
+                    <Menu.Item key={'edit'} onClick={editProject(project.id)}>
+                      编辑
                     </Menu.Item>
+                    <Menu.Item key={'delete'}>删除</Menu.Item>
                   </Menu>
                 }
               >

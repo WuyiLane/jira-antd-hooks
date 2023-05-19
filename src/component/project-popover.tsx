@@ -3,9 +3,17 @@ import { Button, Divider, List, Popover, Typography } from 'antd';
 import React from 'react';
 import { useProject } from 'utils/project';
 import { ButtonNoPadding } from './lib';
+import { useDispatch } from 'react-redux';
+import { projectListActions } from '../screens/project-list/project-list.slice';
+import { useProjectModal } from '../screens/project-list/util';
 
-export const ProjectPopover = (props: { setProjectModelOpen: (isOpen: boolean) => void }) => {
+//  组合组件
+export const ProjectPopover = () => {
+  // hooks
+  const dispatch = useDispatch();
   const { data: projects, isLoading } = useProject();
+  // 弹窗按钮封装全局
+  const { open } = useProjectModal();
   const pinnedProjects = projects?.filter(project => project.pin);
   const content = (
     <ContentContainer>
@@ -18,7 +26,7 @@ export const ProjectPopover = (props: { setProjectModelOpen: (isOpen: boolean) =
         ))}
       </List>
       <Divider />
-      <ButtonNoPadding type={'link'} onClick={() => props.setProjectModelOpen(true)}>
+      <ButtonNoPadding onClick={open} type={'link'}>
         创建项目
       </ButtonNoPadding>
     </ContentContainer>

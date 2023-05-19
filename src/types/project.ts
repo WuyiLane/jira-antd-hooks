@@ -1,8 +1,12 @@
 export interface Project {
   id: number;
   name: string;
-  personId: string;
   pin: boolean;
+  personId: number | undefined;
+  ths: string;
+  strings: string;
+  caters: string;
+  created: string;
   organization: string;
-  created: number;
+  keg: string;
 }

@@ -3,7 +3,8 @@ import { Button, Form, Input } from 'antd';
 import { useAuth } from 'context/auth-context';
 import { LongButton } from './index';
 import { useAsync } from '../utils/use-async';
-
+import { useDispatch } from 'react-redux';
+import { login } from '../store/auth.slice';
 // 普通类型
 
 interface Advance {
@@ -26,6 +27,7 @@ export const LoginScreen = ({ onError }: { onError: (error: Error) => void }) =>
   });
   const { login, user } = useAuth();
   const { run, isLoading, error } = useAsync(undefined, { throwOnError: true });
+  const dispatch = useDispatch();
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },

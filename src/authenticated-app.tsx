@@ -1,12 +1,11 @@
 import { ProjectListScreen } from 'screens/project-list';
 import { useAuth } from 'context/auth-context';
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Dropdown, Menu } from 'antd';
 import styled from '@emotion/styled';
 import { ButtonNoPadding, Row } from './component/lib';
 import { ReactComponent as SoftwareLogo } from 'assets/software-logo.svg';
-import { ReactComponent } from '*.svg';
-import { resetRoute, useDocumentTitle } from './utils';
+import { resetRoute } from './utils';
 import { Navigate, Route, Routes } from 'react-router';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ProjectScreen } from './screens/ProjectScreen';
@@ -24,38 +23,44 @@ import { ProjectPopover } from 'component/project-popover';
 
 // prop drilling  定义和使用 比较远, 传递的地方比较深  耦合在一起,
 export const AuthenticatedApp = () => {
-  const [projectModalOpen, setProjectModelOpen] = useState(false);
   const value: any = undefined;
   // useDocumentTitle('登录成功页面')
+  {
+    /*{value.notExist}*/
+  }
+  {
+    /*   不传递函数,传递 jsx setProjectModelOpen={setProjectModelOpen}*/
+  }
+  {
+    /*/!*    改造第一步 */
+  }
+  {
+    /*  useLocation() may be used only in the context of a <Router> component.  */
+  }
   return (
     <Container>
-      {/*{value.notExist}*/}
-      <PageHeader setProjectModelOpen={setProjectModelOpen} />
-      <Main>
-        {/*<ProjectListScreen/>*/}
-        <Router>
+      <Router>
+        <PageHeader />
+        <Main>
+          {/*<ProjectListScreen/>*/}
+
           <Routes>
-            <Route
-              path={'/projects'}
-              element={<ProjectListScreen setProjectModelOpen={setProjectModelOpen} />}
-            />
+            <Route path={'/projects'} element={<ProjectListScreen />} />
             <Route path={'/projects/:projectId/*'} element={<ProjectScreen />} />
             <Route path='*' element={<Navigate to='/projects' replace={true} />} />
           </Routes>
-        </Router>
-      </Main>
-      {/* 弹窗 */}
-      <ProjectModal
-        projectModalOpen={projectModalOpen}
-        onClose={() => setProjectModelOpen(false)}
-      />
+        </Main>
+        {/* 弹窗 */}
+        {/*    router */}
+        <ProjectModal />
+      </Router>
     </Container>
   );
 };
 
 // 规划
 
-const PageHeader = (props: { setProjectModelOpen: (isOpen: boolean) => void }) => {
+const PageHeader = () => {
   return (
     <Header between={true}>
       <HeaderLeft gap={true}>
@@ -64,7 +69,7 @@ const PageHeader = (props: { setProjectModelOpen: (isOpen: boolean) => void }) =
         <ButtonNoPadding type={'link'} onClick={resetRoute}>
           <SoftwareLogo width={'18rem'} color={'rgb(38,132,   255)'} />
         </ButtonNoPadding>
-        <ProjectPopover setProjectModelOpen={props.setProjectModelOpen} />
+        <ProjectPopover />
         <span>用户</span>
       </HeaderLeft>
       <HeaderRight>

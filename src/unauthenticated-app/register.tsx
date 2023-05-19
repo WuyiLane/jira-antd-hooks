@@ -90,6 +90,7 @@ export const RegisterScreen = ({ onError }: { onError: (error: Error) => void })
     // const username = (event.currentTarget.elements[0] as HTMLInputElement).value
     // const password = (event.currentTarget.elements[1] as HTMLInputElement).value
     try {
+      // @ts-ignore
       await run(register(values));
     } catch (e) {
       onError(e);
