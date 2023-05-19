@@ -1,4 +1,4 @@
-import { useUrlQueryParam } from '../../utils/url';
+import { useSetUrlSearchParam, useUrlQueryParam } from '../../utils/url';
 import { useMemo } from 'react';
 import { useProjects } from '../../utils/project';
 
@@ -10,7 +10,10 @@ export const useProjectsSearchParams = () => {
     setParam,
   ] as const;
 };
-
+export const useProjectsQueryKey = () => {
+  const [params] = useProjectsSearchParams();
+  return ['projects', params];
+};
 /***
  * 取代 redux 或者 content 的作用
  */
@@ -24,12 +27,11 @@ export const useProjectModal = () => {
    * 编辑
    */
   const [{ editingProjectId }, setEditingProjectId] = useUrlQueryParam(['editingProjectId']);
-
+  const setUrlParams = useSetUrlSearchParam();
   const { data: editingProject, isLoading } = useProjects(Number(editingProjectId));
   const open = () => setProjectCreate({ projectCreate: true });
   const close = () => {
-    setProjectCreate({ projectCreate: undefined });
-    setEditingProjectId({ editingProjectId: undefined });
+    setUrlParams({ projectCreate: undefined, editingProjectId: undefined });
   };
   const startEdit = (id: number) => setEditingProjectId({ editingProjectId: id });
   return {

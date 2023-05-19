@@ -1,13 +1,14 @@
 import React from 'react';
-import { Dropdown, Menu, Table } from 'antd';
+import { Dropdown, Menu, Modal, Table } from 'antd';
 import { TableProps } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import { Pin } from '../../component/pin';
-import { useEditProject, useProject } from '../../utils/project';
+import { useDelProject, useEditProject, useProject } from '../../utils/project';
 import { ButtonNoPadding } from '../../component/lib';
 import { useDispatch } from 'react-redux';
-import { useProjectModal } from './util';
+import { useProjectModal, useProjectsQueryKey } from './util';
+import { Project } from '../../types/project';
 // react-router 和 react-router-dom 的关系  类似于 react 和react-dom的关系
 // import {Link} from "react-router-dom";
 
@@ -39,12 +40,12 @@ function List({ users, ...props }: ListProps): JSX.Element {
   const dispatch = useDispatch();
   // const user = users.find(user => user.id === project.personId);
   const { dataSource } = props;
-  const { mutate } = useEditProject();
+  const { mutate } = useEditProject(useProjectsQueryKey());
   // 柯里化风格代码
   // 先消化 id  再消化 pin
-  const { startEdit } = useProjectModal();
+
   const PinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
-  const editProject = (id: number) => () => startEdit(id);
+
   // const dataSource =
   //   // 过滤数据 将 name 过滤出来
   //   dataSource
@@ -165,20 +166,7 @@ function List({ users, ...props }: ListProps): JSX.Element {
         },
         {
           render(value, project) {
-            return (
-              <Dropdown
-                overlay={
-                  <Menu>
-                    <Menu.Item key={'edit'} onClick={editProject(project.id)}>
-                      编辑
-                    </Menu.Item>
-                    <Menu.Item key={'delete'}>删除</Menu.Item>
-                  </Menu>
-                }
-              >
-                <ButtonNoPadding type={'link'}>...</ButtonNoPadding>
-              </Dropdown>
-            );
+            return <More project={project} />;
           },
         },
       ]}
@@ -186,5 +174,39 @@ function List({ users, ...props }: ListProps): JSX.Element {
     />
   );
 }
+
+// 编辑和删除组件抽离
+
+const More = ({ project }: { project: Project }) => {
+  const { startEdit } = useProjectModal();
+  const editProject = (id: number) => () => startEdit(id);
+  const { mutate: DelProject } = useDelProject(useProjectsQueryKey());
+  const confirmDeleteProject = (id: number) => {
+    // 提示
+    Modal.confirm({
+      title: '确定删除吗?',
+      okText: '确定',
+      onOk() {
+        DelProject({ id });
+      },
+    });
+  };
+  return (
+    <Dropdown
+      overlay={
+        <Menu>
+          <Menu.Item key={'edit'} onClick={editProject(project.id)}>
+            编辑
+          </Menu.Item>
+          <Menu.Item key={'delete'} onClick={() => confirmDeleteProject(project.id)}>
+            删除
+          </Menu.Item>
+        </Menu>
+      }
+    >
+      <ButtonNoPadding type={'link'}>...</ButtonNoPadding>
+    </Dropdown>
+  );
+};
 
 export default List;

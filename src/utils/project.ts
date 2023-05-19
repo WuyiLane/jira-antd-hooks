@@ -1,8 +1,7 @@
 import { useHttp } from './http';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { QueryKey, useMutation, useQuery } from 'react-query';
 import { Project } from '../types/project';
-import { useProjectsSearchParams } from '../screens/project-list/util';
-import { projects } from 'jira-dev-tool/dist/server/initial-data';
+import { useAddConfig, useDeleteConfig, useEditConfig } from './use-optimistic-options';
 // 请求封装
 // ---- 获取列表------
 export const useProject = (param?: Partial<Project>) => {
@@ -13,11 +12,8 @@ export const useProject = (param?: Partial<Project>) => {
 // ---- 选中列表编辑------
 // id, param
 
-export const useEditProject = () => {
+export const useEditProject = (queryKey: QueryKey) => {
   const client = useHttp();
-  const queryClient = useQueryClient();
-  const [searchParams] = useProjectsSearchParams();
-  const queryKey = ['projects', searchParams];
   /***
    *  使用useQuery, useMutation  刷新列表
    */
@@ -27,22 +23,7 @@ export const useEditProject = () => {
         method: 'PATCH',
         data: params,
       }),
-    {
-      onSuccess: () => queryClient.invalidateQueries(queryKey),
-      onMutate: async function (target) {
-        const previousItems = queryClient.getQueryData(queryKey);
-        // 缓存 获取刷新的数据
-        queryClient.setQueryData(queryKey, (old?: Project[]) => {
-          return old?.map(project =>
-            project.id === target.id ? { ...project, ...target } : project || []
-          ) as Project[];
-        });
-        return { previousItems };
-      },
-      onError(error, newItemm, context) {
-        queryClient.setQueryData(queryKey, (context as { previousItems: Project[] }).previousItems);
-      },
-    }
+    useEditConfig(queryKey)
   );
   //       data: params,
   //       method: 'PATCH',
@@ -61,8 +42,7 @@ export const useEditProject = () => {
   // };
 };
 // ------------ 添加列表-----------
-export const useAddProject = () => {
-  const queryClient = useQueryClient();
+export const useAddProject = (queryKey: QueryKey) => {
   const client = useHttp();
   return useMutation(
     (params: Partial<Project>) =>
@@ -70,9 +50,7 @@ export const useAddProject = () => {
         data: params,
         method: 'POST',
       }),
-    {
-      onSuccess: () => queryClient.invalidateQueries('projects'),
-    }
+    useAddConfig(queryKey)
   );
 };
 // 获取详情 当前id必须有值
@@ -81,4 +59,17 @@ export const useProjects = (id?: number) => {
   return useQuery<Project>(['project', { id }], () => client(`projects/${id}`), {
     enabled: Boolean(id),
   });
+};
+
+// 删除列表项数
+
+export const useDelProject = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation(
+    ({ id }: { id: number }) =>
+      client(`projects/${id}`, {
+        method: 'DELETE',
+      }),
+    useDeleteConfig(queryKey)
+  );
 };
