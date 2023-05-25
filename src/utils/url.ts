@@ -3,7 +3,7 @@
  *
  */
 import { URLSearchParamsInit, useSearchParams } from 'react-router-dom';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { cleanObject } from './index';
 
 // 返回name=“骑手” id ="18"
@@ -11,6 +11,7 @@ import { cleanObject } from './index';
 export const useUrlQueryParam = <K extends string>(keys: K[]) => {
   const [searchParams] = useSearchParams();
   const setSearchParams = useSetUrlSearchParam();
+  const [stateKeys] = useState(keys);
   return [
     useMemo(
       () =>
@@ -18,7 +19,7 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
           return { ...prev, [key]: searchParams.get(key) || '' };
         }, {} as { [key in K]: string }),
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [searchParams]
+      [searchParams, stateKeys]
     ),
     (params: Partial<{ [key in K]: unknown }>) => {
       return setSearchParams(params);

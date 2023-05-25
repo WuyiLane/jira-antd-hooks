@@ -1,14 +1,14 @@
 import React, { useCallback, useState } from 'react';
 import * as auth from 'auth-provider';
-import { User } from 'screens/project-list/search-panel';
 import { http } from 'utils/http';
 import { useMount } from 'utils';
 import { useAsync } from '../utils/use-async';
-import { users } from '../types/user';
+import { User, users } from '../types/user';
 import { FullPageErrorFallback, FullPageLoading } from '../component/lib';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from 'store/auth.slice';
 import * as authStore from 'store/auth.slice';
+import { useQueryClient } from 'react-query';
 export interface AuthForm {
   username: string;
   password: string;
@@ -46,10 +46,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     run,
     setData: setUser,
   } = useAsync<User | null>();
-
+  // 防止 新注册用户, 看到的不是原始数据,清空老用户的数据
+  const queryClient = useQueryClient();
   const login = (form: AuthForm) => auth.login(form).then(setUser);
   const register = (form: AuthForm) => auth.register(form).then(setUser);
-  const logout = () => auth.logout().then(() => setUser(null));
+  const logout = () =>
+    auth.logout().then(() => {
+      setUser(null);
+      queryClient.clear();
+    });
   useMount(() => {
     // 初始化setUser
     run(bootstrapUser());

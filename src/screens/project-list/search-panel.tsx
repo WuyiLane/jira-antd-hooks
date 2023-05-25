@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Select, Space, Switch } from 'antd';
 import { SizeType } from 'antd/es/config-provider/SizeContext';
 import { UserSelect } from '../../component/user-select';
+import { User } from '../../types/user';
 // import  { users } from '../../types/user'
 const { Option } = Select;
 type UserType = {
@@ -13,12 +14,6 @@ type UserType = {
   name: string;
   token: string;
 };
-
-export interface User {
-  id: number;
-  name: string;
-  token: string;
-}
 
 type ProjectType = {
   id: number;

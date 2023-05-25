@@ -82,10 +82,10 @@ export const RegisterScreen = ({ onError }: { onError: (error: Error) => void })
     remember: boolean;
     cpassword: string;
   }) => {
-    if (cpassword !== values.password) {
-      onError(new Error('请确认两次输入的密码是否相同'));
-      return;
-    }
+    // if (cpassword !== values.password) {
+    //   onError(new Error('请确认两次输入的密码是否相同'));
+    //   return;
+    // }
     // event.preventDefault()
     // const username = (event.currentTarget.elements[0] as HTMLInputElement).value
     // const password = (event.currentTarget.elements[1] as HTMLInputElement).value

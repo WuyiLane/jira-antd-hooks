@@ -1,8 +1,8 @@
-import { User } from '../screens/project-list/search-panel';
 import { createSlice } from '@reduxjs/toolkit';
 import * as auth from 'auth-provider';
 import { AppDispatch, RootState } from './index';
 import { AuthForm, bootstrapUser } from '../context/auth-context';
+import { User } from '../types/user';
 
 interface State {
   user: User | null;

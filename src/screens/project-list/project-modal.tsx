@@ -35,13 +35,17 @@ export const ProjectModal = () => {
       close();
     });
   };
-
+  // 点击叉号的时候,清空数据,创建业务
+  const closeModal = () => {
+    form.resetFields();
+    close();
+  };
   useEffect(() => {
     form.setFieldsValue(editingProject);
   }, [editingProject, form]);
 
   return (
-    <Drawer forceRender={true} onClose={close} width={'100%'} visible={ProjectModalOpen}>
+    <Drawer forceRender={true} onClose={closeModal} width={'100%'} visible={ProjectModalOpen}>
       <Container>
         {isLoading ? (
           <Spin size={'large'} />

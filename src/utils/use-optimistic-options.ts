@@ -28,7 +28,21 @@ export const useConfig = (
 };
 export const useDeleteConfig = (queryKey: QueryKey) =>
   useConfig(queryKey, (target, old) => old?.filter(item => item.id !== target.id) || []);
+/**
+ * 使用乐观更新解决  hooks 中使用条件的问题
+ * @param queryKey
+ */
+// ------ 错误的代码 -----------
+// export const useEditConfig = (queryKey: QueryKey) =>
+//   useConfig(queryKey, (target, old) => old?.map(item => item.id !== target.id) || []);
+
+// ---------- 正确的代码 ---------
+
 export const useEditConfig = (queryKey: QueryKey) =>
-  useConfig(queryKey, (target, old) => old?.map(item => item.id !== target.id) || []);
+  useConfig(
+    queryKey,
+    (target, old) => old?.map(item => (item.id === target.id ? { ...item, ...target } : item)) || []
+  );
+
 export const useAddConfig = (queryKey: QueryKey) =>
   useConfig(queryKey, (target, old) => (old ? [...old, target] : []));

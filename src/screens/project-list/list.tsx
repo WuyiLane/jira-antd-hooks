@@ -4,30 +4,17 @@ import { TableProps } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import { Pin } from '../../component/pin';
-import { useDelProject, useEditProject, useProject } from '../../utils/project';
+import { useDelProject, useEditProject } from '../../utils/project';
 import { ButtonNoPadding } from '../../component/lib';
 import { useDispatch } from 'react-redux';
 import { useProjectModal, useProjectsQueryKey } from './util';
-import { Project } from '../../types/project';
+import { Project, ProjectType } from '../../types/project';
 // react-router 和 react-router-dom 的关系  类似于 react 和react-dom的关系
 // import {Link} from "react-router-dom";
 
 type UserType = {
   id: number;
   name: string;
-};
-
-export type ProjectType = {
-  id: number;
-  name: string;
-  pin: boolean;
-  personId: number | undefined;
-  ths: string;
-  strings: string;
-  caters: string;
-  created: string;
-  organization: string;
-  keg: string;
 };
 
 interface ListProps extends TableProps<ProjectType> {
