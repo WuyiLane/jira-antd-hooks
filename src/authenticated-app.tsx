@@ -98,14 +98,12 @@ const User = () => {
     </Dropdown>
   );
 };
-// const  let 存在暂时性死区
 const Container = styled.div`
   display: grid;
-  grid-template-rows: 6rem 1fr 6rem;
+  grid-template-rows: 6rem 1fr;
   height: 100vh;
 `;
 
-const HeaderItem = styled.h3``;
 // grid-area 用来给grid子元素起名字
 const Header = styled(Row)`
   padding: 3.2rem;
@@ -115,5 +113,6 @@ const Header = styled(Row)`
 const HeaderLeft = styled(Row)``;
 const HeaderRight = styled.div``;
 const Main = styled.main`
-  width: 100%;
+  display: flex;
+  overflow: hidden;
 `;
