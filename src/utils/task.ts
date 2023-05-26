@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { Project, ProjectTasks } from '../types/project';
 import { Task } from 'types/task';
 import { QueryKey, useMutation } from 'react-query';
-import { useAddConfig, useEditConfig } from './use-optimistic-options';
+import { useAddConfig, useDeleteConfig, useEditConfig } from './use-optimistic-options';
 import { Kanban } from '../types/kanban';
 // 请求封装
 // ---- 获取列表------
@@ -43,5 +43,31 @@ export const useAddTask = (queryKey: QueryKey) => {
         method: 'POST',
       }),
     useAddConfig(queryKey)
+  );
+};
+
+// 删除列表项数
+
+export const useDelTask = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation(
+    ({ id }: { id: number }) =>
+      client(`tasks/${id}`, {
+        method: 'DELETE',
+      }),
+    useDeleteConfig(queryKey)
+  );
+};
+
+// 删除任务
+
+export const useDeleteTask = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation(
+    ({ id }: { id: number }) =>
+      client(`tasks/${id}`, {
+        method: 'DELETE',
+      }),
+    useDeleteConfig(queryKey)
   );
 };

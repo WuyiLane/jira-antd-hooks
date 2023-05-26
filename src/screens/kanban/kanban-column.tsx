@@ -2,16 +2,17 @@
 import React from 'react';
 import { Kanban } from 'types/kanban';
 import { useTasks } from 'utils/task';
-import { useTasksModal, useTasksSeachParams } from './util';
+import { useKanbansQueryKey, useTasksModal, useTasksSeachParams } from './util';
 import { useTaskTypes } from '../../utils/task-type';
 import taskIcon from 'assets/task.svg';
 import bugIcon from 'assets/bug.svg';
 import styled from '@emotion/styled';
-import { Card } from 'antd';
+import { Button, Card, Dropdown, Menu, Modal } from 'antd';
 import { CreateTask } from 'screens/kanban/create-task';
 import { Task } from '../../types/task';
 import { Mark } from '../../component/mark';
-
+import { useDelKanban } from '../../utils/kanban';
+import { Row } from 'component/lib';
 // 根据id 渲染图片组件
 
 const TaskTypeIcon = ({ id }: { id: number }) => {
@@ -49,6 +50,10 @@ export const KanbanColumn = ({ kanban }: { kanban: Kanban }) => {
 
   return (
     <Container>
+      <Row between={true}>
+        <h3>{kanban.name}</h3>
+        <More kanban={kanban} />
+      </Row>
       <h3>{kanban.name}</h3>
       <TasksContainer>
         {tasks?.map(task => (
@@ -57,6 +62,37 @@ export const KanbanColumn = ({ kanban }: { kanban: Kanban }) => {
         <CreateTask kanbanId={kanban.id} />
       </TasksContainer>
     </Container>
+  );
+};
+
+const More = ({ kanban }: { kanban: Kanban }) => {
+  // 操作删除引入接口
+  const { mutateAsync } = useDelKanban(useKanbansQueryKey());
+  // 删除功能
+  const startEdit = () => {
+    Modal.confirm({
+      okText: '确定',
+      cancelText: '取消',
+      title: '确定删除看板吗?',
+      onOk() {
+        return mutateAsync({ id: kanban.id });
+      },
+    });
+  };
+  // 鼠标悬浮
+  const overlay = (
+    <Menu>
+      <Menu.Item>
+        <Button type={'link'} onClick={startEdit}>
+          删除
+        </Button>
+      </Menu.Item>
+    </Menu>
+  );
+  return (
+    <Dropdown overlay={overlay}>
+      <Button type={'link'}>...</Button>
+    </Dropdown>
   );
 };
 const Img = styled.img`

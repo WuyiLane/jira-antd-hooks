@@ -1,9 +1,7 @@
 import { useHttp } from './http';
 import { QueryKey, useMutation, useQuery } from 'react-query';
-import { ProjectTasks } from '../types/project';
 import { Kanban } from 'types/kanban';
-import { useAddConfig } from './use-optimistic-options';
-import { Task } from '../types/task';
+import { useAddConfig, useDeleteConfig } from './use-optimistic-options';
 // 请求封装
 // ---- 获取接口hooks列表 看板的状态------
 export const useKanbans = (param?: Partial<Kanban>) => {
@@ -21,5 +19,18 @@ export const useAddKanban = (queryKey: QueryKey) => {
         method: 'POST',
       }),
     useAddConfig(queryKey)
+  );
+};
+
+// 删除列表项数
+
+export const useDelKanban = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation(
+    ({ id }: { id: number }) =>
+      client(`kanbans/${id}`, {
+        method: 'DELETE',
+      }),
+    useDeleteConfig(queryKey)
   );
 };
