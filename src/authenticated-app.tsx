@@ -11,6 +11,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { ProjectScreen } from './screens/ProjectScreen';
 import { ProjectModal } from 'screens/project-list/project-modal';
 import { ProjectPopover } from 'component/project-popover';
+import { UserPopover } from './component/user-popover';
 
 /***
  *  grid 和flex
@@ -70,7 +71,7 @@ const PageHeader = () => {
           <SoftwareLogo width={'18rem'} color={'rgb(38,132,   255)'} />
         </ButtonNoPadding>
         <ProjectPopover />
-        <span>用户</span>
+        <UserPopover />
       </HeaderLeft>
       <HeaderRight>
         <User />

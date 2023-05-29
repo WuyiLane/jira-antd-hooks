@@ -6,34 +6,31 @@ import { ButtonNoPadding } from './lib';
 import { useDispatch } from 'react-redux';
 import { projectListActions } from '../screens/project-list/project-list.slice';
 import { useProjectModal } from '../screens/project-list/util';
+import { useUsers } from '../utils/user';
 
 //  组合组件
-export const ProjectPopover = () => {
+export const UserPopover = () => {
   // hooks
   const dispatch = useDispatch();
-  const { data: projects, isLoading, refetch } = useProject();
+  const { data: users, refetch } = useUsers();
   // 弹窗按钮封装全局
   const { open } = useProjectModal();
-  const pinnedProjects = projects?.filter(project => project.pin);
   const content = (
     <ContentContainer>
-      <Typography.Text type={'secondary'}>收藏项目</Typography.Text>
+      <Typography.Text type={'secondary'}>用户列表</Typography.Text>
       <List>
-        {pinnedProjects?.map(project => (
-          <List.Item>
-            <List.Item.Meta title={project.name} />
+        {users?.map(user => (
+          <List.Item key={user.id}>
+            <List.Item.Meta title={user.name} />
           </List.Item>
         ))}
       </List>
       <Divider />
-      <ButtonNoPadding onClick={open} type={'link'}>
-        创建项目
-      </ButtonNoPadding>
     </ContentContainer>
   );
   return (
     <Popover onVisibleChange={() => refetch()} placement={'bottom'} content={content}>
-      <span>项目</span>
+      <span>用户</span>
     </Popover>
   );
 };

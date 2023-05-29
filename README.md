@@ -48,3 +48,8 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ## Hoc
 
 > 容器组件与展示组件分离, separation of container presidential, 组件分离
+
+### 编写业务的时候
+
+> 1.写 定义类型 types =>? export interface  
+>  2.写 对接接口渲染数据 utils =>? export use? 3.写 编写页面 screens =>? epic export hooks
