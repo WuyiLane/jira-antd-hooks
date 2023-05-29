@@ -59,7 +59,8 @@ export const KanbanColumn =
         </Row>
         <TasksContainer>
           <Drop type={'ROW'} direction={'vertical'} droppableId={String(kanban.id)}>
-            <DropChild>
+            {/* 解决为空的时候,可以拖拽的问题*/}
+            <DropChild style={{ minHeight: '5px' }}>
               {tasks?.map((task, taskIndex) => (
                 <Drag draggableId={'task' + task.id} index={taskIndex} key={task.id}>
                   <div>
