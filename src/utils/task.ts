@@ -3,8 +3,14 @@ import { useQuery } from 'react-query';
 import { Project, ProjectTasks } from '../types/project';
 import { Task } from 'types/task';
 import { QueryKey, useMutation } from 'react-query';
-import { useAddConfig, useDeleteConfig, useEditConfig } from './use-optimistic-options';
+import {
+  useAddConfig,
+  useDeleteConfig,
+  useEditConfig,
+  useReorderTaskInsertConfig,
+} from './use-optimistic-options';
 import { Kanban } from '../types/kanban';
+import { SortProps } from './kanban';
 // 请求封装
 // ---- 获取列表------
 export const useTasks = (param?: Partial<Task>) => {
@@ -69,5 +75,19 @@ export const useDeleteTask = (queryKey: QueryKey) => {
         method: 'DELETE',
       }),
     useDeleteConfig(queryKey)
+  );
+};
+
+export const useReorderTask = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation(
+    (params: SortProps) => {
+      return client('tasks/reorder', {
+        data: params,
+        method: 'POST',
+      });
+    },
+    // 乐观更新
+    useReorderTaskInsertConfig(queryKey)
   );
 };
