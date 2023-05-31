@@ -42,7 +42,7 @@
     "test": "craco test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -r git@github.com:sindu12jun/sindu12jun.github.io.git -b main",
+    "deploy": "gh-pages -d build -r git@github.com:lotussqy/lotussqy.github.io.git -b master",
     "server": "json-server _json_server_mock_/db.json -- watch --port 3000 --middlewares ./_json_server_mock_/middlewares.js",
     "prepare": "husky install"
   },
@@ -76,6 +76,7 @@
     "@types/react-beautiful-dnd": "^13.1.4",
     "@types/react-helmet": "^6.1.0",
     "eslint-config-prettier": "^6.15.0",
+    "gh-pages": "^5.0.0",
     "husky": ">=6",
     "json-server": "^0.16.2",
     "lint-staged": ">=10",
