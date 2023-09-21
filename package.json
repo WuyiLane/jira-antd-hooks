@@ -42,7 +42,7 @@
     "test": "craco test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -r git@github.com:lotussqy/lotussqy.github.io.git -b master",
+    "deploy": "gh-pages -d build -r git@github.com:WuyiLane/WuyiLane.github.io.git -b master",
     "server": "json-server _json_server_mock_/db.json -- watch --port 3000 --middlewares ./_json_server_mock_/middlewares.js",
     "prepare": "husky install"
   },
